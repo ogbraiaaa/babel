@@ -3,6 +3,13 @@ const $ = (id) => document.getElementById(id);
 const token = document.querySelector('meta[name="babel-token"]').content;
 let session = null;
 let busy = false;
+let conversations = [];
+function icon(name) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.classList.add('icon'); svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(svg.namespaceURI, 'use');
+  use.setAttribute('href', '#i-' + name); svg.append(use); return svg;
+}
 async function api(path, data) {
   const response = await fetch('/api/' + path, {
     method: data === undefined ? 'GET' : 'POST',
@@ -26,22 +33,31 @@ function feedback(message, error = false) {
 function setBusy(value) {
   busy = value;
   document.querySelectorAll('button,select,textarea').forEach(el => {el.disabled = value;});
+  for (const id of ['menu', 'environment-open', 'environment-close']) $(id).disabled = false;
   $('send').disabled = value || !!session?.pending || !$('model').value;
-  $('send').textContent = value ? 'Pensando…' : 'Enviar';
+  $('send').setAttribute('aria-label', value ? 'Pensando…' : 'Enviar mensagem');
   $('conversation').setAttribute('aria-busy', String(value));
 }
 async function history() {
-  const list = await api('sessions');
+  conversations = await api('sessions');
+  renderHistory();
+}
+function renderHistory() {
+  const query = $('search').value.trim().toLocaleLowerCase('pt-BR');
+  const list = conversations.filter(item => item.title.toLocaleLowerCase('pt-BR').includes(query));
   $('sessions').replaceChildren();
   list.forEach(item => {
-    const button = text('button', item.title);
+    const button = text('button', '');
+    button.append(icon('chat'), text('span', item.title));
     button.setAttribute('aria-current', String(item.id === session?.id));
     button.disabled = busy;
-    button.onclick = () => perform(async () => { session = await api('sessions/' + item.id); render(); await history(); });
+    button.onclick = () => perform(async () => { session = await api('sessions/' + item.id); render(); await history(); closeMenu(); });
     $('sessions').append(button);
   });
+  if (!list.length) $('sessions').append(text('p', query ? 'Nenhuma conversa encontrada.' : 'Sua próxima ideia começa aqui.', 'empty-history'));
 }
 function render() {
+  $('page-title').textContent = session?.messages.length ? session.title : 'Espaço pessoal';
   $('welcome').hidden = !!session?.messages.length;
   $('messages').replaceChildren();
   for (const message of session?.messages || []) {
@@ -103,6 +119,11 @@ async function refresh() {
   else if (!status.models.length) feedback('Instale um modelo: ollama pull qwen3:4b. Depois atualize a lista.', true);
 }
 $('new').onclick = () => perform(async () => { session = await api('sessions', {}); render(); await history(); feedback('Nova conversa pronta.'); $('message').value = ''; });
+$('search').oninput = renderHistory;
+function closeMenu() { document.body.classList.remove('menu-open'); $('menu').setAttribute('aria-expanded', 'false'); }
+$('menu').onclick = () => { const open = document.body.classList.toggle('menu-open'); $('menu').setAttribute('aria-expanded', String(open)); };
+$('environment-open').onclick = () => $('environment').showModal();
+$('environment-close').onclick = () => $('environment').close();
 $('refresh').onclick = () => perform(refresh);
 $('model').onchange = () => { localStorage.setItem('babel-model', $('model').value); setBusy(false); };
 $('composer').onsubmit = (event) => {

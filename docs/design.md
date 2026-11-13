@@ -1,12 +1,12 @@
 # Direção visual
 
-O Babel usa um painel de comando sóbrio: navegação à esquerda, conversa central e ambiente à direita. A referência foi um conceito gerado com Image Gen; a interface final é implementada em HTML/CSS, sem imagens externas em tempo de execução.
+O Babel usa uma interface monocromática: navegação à esquerda, conversa central e ambiente em um painel que abre sob demanda. A referência foi um conceito gerado com Image Gen a partir da direção enviada pelo usuário; a interface final é implementada em HTML/CSS/SVG, sem imagens externas em tempo de execução.
 
-- Fundo grafite `#10171c`, superfícies `#182229`, bordas `#34464f`.
-- Texto `#eef4f6`, secundário `#aabac3`, ação `#79d8e5`.
+- Fundo `#0b0c0e`, superfícies `#131518`, bordas `#303339`.
+- Texto `#f4f4f5`, secundário `#a2a5ad`, conexão `#b6dce3`.
 - Segoe UI/system-ui, controles com pelo menos 44 px de altura.
-- O núcleo de três círculos é a assinatura visual; ele permanece estático para não simular atividade.
-- Em telas menores, o ambiente aparece abaixo da conversa; no celular, a navegação passa para o topo.
-- Configurações sem função foram substituídas por exportação de conversa. Ferramentas aparecem como capacidades, sem interruptores fictícios.
+- A marca é um ciclo em forma de serpente geométrica em torno da letra B, inspirado na referência fornecida e desenhado em SVG.
+- No celular, as conversas ficam em um menu expansível. O painel Ambiente é um diálogo nativo com foco contido e fechamento por Escape.
+- Busca por título, sugestões com descrições e seletor de modelo junto da mensagem evitam controles sem função.
 
 O screenshot `babel.png` mostra o aplicativo real, não o conceito.

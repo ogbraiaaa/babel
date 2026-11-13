@@ -3,49 +3,71 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Babel, seu agente pessoal de IA local.">
-  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#10171c">
-  <title>Babel · Central de comando</title>
+  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#0b0c0e">
+  <title>Babel · Seu espaço pessoal</title>
   <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a9 9 0 0 1-9 8.5 10 10 0 0 1-4-1l-5 2 1.5-5A8 8 0 0 1 3 11.5a9 9 0 0 1 18 0Z"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V4h6l3 3h9v13H3V7Z"/><path d="M3 8h18"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h9l5 5v13H5V3Zm9 0v6h5M8 13h8M8 17h8"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6M3 11h18M7 15h2m3 0h2m3 0h1M7 18h2m3 0h2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M3 6h4m4 0h10M3 12h10m4 0h4M3 18h4m4 0h10"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="18" r="2"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 20V4m-7 7 7-7 7 7"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+</svg>
 <a class="skip" href="#message">Ir para a mensagem</a>
-<aside class="sidebar">
-  <a class="brand" href="/" aria-label="Babel, início"><img src="/favicon.svg" alt="" width="40" height="48">babel</a>
-  <button id="new" class="primary">＋ Nova conversa</button>
-  <h2>Conversas</h2><nav id="sessions" aria-label="Conversas salvas"></nav>
-  <p class="privacy">Suas conversas ficam<br>neste computador.</p>
-  <button id="export" class="secondary">Exportar conversa</button>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/" aria-label="Babel, início"><img src="/favicon.svg" alt="" width="50" height="50"><span>babel<small>Seu agente pessoal</small></span></a>
+  <button id="new" class="outline"><svg class="icon"><use href="#i-plus"/></svg>Nova conversa</button>
+  <label class="sr-only" for="search">Buscar conversa</label>
+  <div class="search-field"><svg class="icon"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Buscar conversa" autocomplete="off"></div>
+  <h2 class="section-label">Recentes</h2><nav id="sessions" aria-label="Conversas salvas"></nav>
+  <div class="sidebar-footer"><button id="export" class="quiet"><svg class="icon"><use href="#i-download"/></svg>Exportar conversa</button></div>
 </aside>
 <main>
-  <header><h1>Central de comando</h1><span id="status" role="status">Conectando ao Ollama…</span></header>
-  <div id="conversation">
-    <section id="welcome">
-      <div class="core" aria-hidden="true"><i></i><i></i><i></i></div>
-      <h2>Às suas ordens.</h2>
-      <p>Converse, explore seus arquivos e transforme ideias em ações.</p>
-      <div class="suggestions">
-        <button data-prompt="Liste os arquivos da minha área de trabalho.">Explorar arquivos</button>
-        <button data-prompt="Crie uma nota em notas/ideias.md com três ideias de projetos de programação.">Criar uma nota</button>
-        <button data-prompt="Me ajude a planejar meu dia. Primeiro pergunte quais são minhas prioridades.">Planejar meu dia</button>
-      </div>
-    </section>
-    <section id="messages" aria-label="Mensagens"></section>
-    <section id="approval" aria-label="Aprovação de ação" hidden></section>
+  <header class="topbar">
+    <button id="menu" class="icon-button mobile-menu" aria-label="Abrir conversas" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
+    <h1 id="page-title">Espaço pessoal</h1>
+    <div class="topbar-actions"><span id="status" role="status">Conectando…</span><button id="environment-open" class="outline"><svg class="icon"><use href="#i-sliders"/></svg>Ambiente</button></div>
+  </header>
+  <div class="stage">
+    <div id="conversation">
+      <section id="welcome">
+        <img class="hero-mark" src="/favicon.svg" width="144" height="144" alt="">
+        <h2>O que vamos criar hoje?</h2>
+        <p>Uma ideia, um plano ou uma tarefa.<br class="mobile-break"> Eu cuido dos próximos passos.</p>
+        <div class="suggestions">
+          <button data-prompt="Liste os arquivos da minha área de trabalho."><svg class="icon"><use href="#i-folder"/></svg><span><strong>Explorar arquivos</strong><small>Encontre o que está na sua área de trabalho</small></span></button>
+          <button data-prompt="Crie uma nota em notas/ideias.md com três ideias de projetos de programação."><svg class="icon"><use href="#i-note"/></svg><span><strong>Escrever uma nota</strong><small>Transforme uma ideia em um arquivo</small></span></button>
+          <button data-prompt="Me ajude a planejar meu dia. Primeiro pergunte quais são minhas prioridades."><svg class="icon"><use href="#i-calendar"/></svg><span><strong>Planejar meu dia</strong><small>Defina prioridades e próximos passos</small></span></button>
+        </div>
+      </section>
+      <section id="messages" aria-label="Mensagens"></section>
+      <section id="approval" aria-label="Aprovação de ação" hidden></section>
+    </div>
+    <div class="composer-area">
+      <form id="composer">
+        <label for="message">Sua mensagem</label>
+        <textarea id="message" rows="2" maxlength="16000" placeholder="Peça algo ao Babel..." required></textarea>
+        <div class="composer-toolbar"><div class="model-field"><label class="sr-only" for="model">Modelo</label><select id="model"><option value="">Carregando…</option></select></div><button id="send" class="send" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
+      </form>
+      <p id="feedback" role="status">Local no seu computador. Ações sempre sob seu controle.</p>
+    </div>
   </div>
-  <form id="composer">
-    <label for="message">Mensagem</label>
-    <div class="input-row"><textarea id="message" rows="2" maxlength="16000" placeholder="O que vamos fazer?" required></textarea><button id="send" class="primary" type="submit">Enviar</button></div>
-    <p id="feedback" role="status">Enter para enviar · Shift + Enter para uma nova linha</p>
-  </form>
 </main>
-<aside class="environment">
-  <h2>Seu ambiente</h2>
-  <label for="model">Modelo</label><select id="model" aria-describedby="model-help"><option value="">Carregando…</option></select>
-  <button id="refresh" class="text-button">Atualizar modelos</button>
-  <p id="model-help">Use um modelo local com suporte a ferramentas.</p>
-  <section><h2>Ferramentas</h2><ul><li>Ler e listar arquivos</li><li>Criar notas e arquivos</li><li>Mover e renomear</li><li>Consultar data e sistema</li></ul><p>Alterações exigem sua aprovação.</p></section>
-  <section><h2>Área de trabalho</h2><p id="workspace"></p><p>O Babel acessa somente esta pasta.</p></section>
-  <p class="version">Babel v0.1 · Local por escolha</p>
-</aside>
+<dialog id="environment" class="drawer" aria-labelledby="environment-title">
+  <div class="dialog-heading"><h2 id="environment-title">Seu ambiente</h2><button id="environment-close" class="icon-button" aria-label="Fechar ambiente"><svg class="icon"><use href="#i-close"/></svg></button></div>
+  <p>Seu modelo, seus arquivos, suas decisões.</p>
+  <section><h3>Modelo local</h3><p id="model-help">Selecione um modelo no campo de mensagem. Ele precisa oferecer suporte a ferramentas.</p><button id="refresh" class="outline">Atualizar modelos</button></section>
+  <section><h3>Ferramentas disponíveis</h3><ul><li>Ler e listar arquivos</li><li>Criar notas e arquivos</li><li>Mover e renomear</li><li>Consultar data e sistema</li></ul><p>Alterações exigem sua aprovação individual.</p></section>
+  <section><h3>Área de trabalho</h3><p id="workspace" class="path"></p><p>O Babel acessa somente esta pasta.</p></section>
+  <p class="version">Babel · Inteligência local</p>
+</dialog>
 </body></html>
