@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "babel-local-agent"
+version = "0.1.0"
+description = "Seu agente pessoal de IA local, com ferramentas e aprovação humana."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "Brayan Silva"}]
+dependencies = []
+
+[project.scripts]
+babel = "babel_agent.server:main"
+
+[tool.setuptools.package-data]
+babel_agent = ["web/*"]
+
+[tool.setuptools.packages.find]
+include = ["babel_agent*"]

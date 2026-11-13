@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.babel/
+.env
+*.sqlite3*
+node_modules/
+.qa/
+.taste-skill/

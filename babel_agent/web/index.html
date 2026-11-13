@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Babel, seu agente pessoal de IA local.">
+  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#10171c">
+  <title>Babel · Central de comando</title>
+  <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#message">Ir para a mensagem</a>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="Babel, início"><img src="/favicon.svg" alt="" width="40" height="48">babel</a>
+  <button id="new" class="primary">＋ Nova conversa</button>
+  <h2>Conversas</h2><nav id="sessions" aria-label="Conversas salvas"></nav>
+  <p class="privacy">Suas conversas ficam<br>neste computador.</p>
+  <button id="export" class="secondary">Exportar conversa</button>
+</aside>
+<main>
+  <header><h1>Central de comando</h1><span id="status" role="status">Conectando ao Ollama…</span></header>
+  <div id="conversation">
+    <section id="welcome">
+      <div class="core" aria-hidden="true"><i></i><i></i><i></i></div>
+      <h2>Às suas ordens.</h2>
+      <p>Converse, explore seus arquivos e transforme ideias em ações.</p>
+      <div class="suggestions">
+        <button data-prompt="Liste os arquivos da minha área de trabalho.">Explorar arquivos</button>
+        <button data-prompt="Crie uma nota em notas/ideias.md com três ideias de projetos de programação.">Criar uma nota</button>
+        <button data-prompt="Me ajude a planejar meu dia. Primeiro pergunte quais são minhas prioridades.">Planejar meu dia</button>
+      </div>
+    </section>
+    <section id="messages" aria-label="Mensagens"></section>
+    <section id="approval" aria-label="Aprovação de ação" hidden></section>
+  </div>
+  <form id="composer">
+    <label for="message">Mensagem</label>
+    <div class="input-row"><textarea id="message" rows="2" maxlength="16000" placeholder="O que vamos fazer?" required></textarea><button id="send" class="primary" type="submit">Enviar</button></div>
+    <p id="feedback" role="status">Enter para enviar · Shift + Enter para uma nova linha</p>
+  </form>
+</main>
+<aside class="environment">
+  <h2>Seu ambiente</h2>
+  <label for="model">Modelo</label><select id="model" aria-describedby="model-help"><option value="">Carregando…</option></select>
+  <button id="refresh" class="text-button">Atualizar modelos</button>
+  <p id="model-help">Use um modelo local com suporte a ferramentas.</p>
+  <section><h2>Ferramentas</h2><ul><li>Ler e listar arquivos</li><li>Criar notas e arquivos</li><li>Mover e renomear</li><li>Consultar data e sistema</li></ul><p>Alterações exigem sua aprovação.</p></section>
+  <section><h2>Área de trabalho</h2><p id="workspace"></p><p>O Babel acessa somente esta pasta.</p></section>
+  <p class="version">Babel v0.1 · Local por escolha</p>
+</aside>
+</body></html>
