@@ -54,10 +54,10 @@ function renderHistory() {
     button.onclick = () => perform(async () => { session = await api('sessions/' + item.id); render(); await history(); closeMenu(); });
     $('sessions').append(button);
   });
-  if (!list.length) $('sessions').append(text('p', query ? 'Nenhuma conversa encontrada.' : 'Sua próxima ideia começa aqui.', 'empty-history'));
+  if (!list.length) $('sessions').append(text('p', query ? 'Nenhuma conversa encontrada.' : 'Nenhuma conversa ainda.', 'empty-history'));
 }
 function render() {
-  $('page-title').textContent = session?.messages.length ? session.title : 'Espaço pessoal';
+  $('page-title').textContent = session?.messages.length ? session.title : 'Nova conversa';
   $('welcome').hidden = !!session?.messages.length;
   $('messages').replaceChildren();
   for (const message of session?.messages || []) {
@@ -118,7 +118,7 @@ async function refresh() {
   if (status.error) feedback(status.error, true);
   else if (!status.models.length) feedback('Instale um modelo: ollama pull qwen3:4b. Depois atualize a lista.', true);
 }
-$('new').onclick = () => perform(async () => { session = await api('sessions', {}); render(); await history(); feedback('Nova conversa pronta.'); $('message').value = ''; });
+$('new').onclick = () => perform(async () => { session = await api('sessions', {}); render(); await history(); closeMenu(); feedback('Nova conversa pronta.'); $('message').value = ''; });
 $('search').oninput = renderHistory;
 function closeMenu() { document.body.classList.remove('menu-open'); $('menu').setAttribute('aria-expanded', 'false'); }
 $('menu').onclick = () => { const open = document.body.classList.toggle('menu-open'); $('menu').setAttribute('aria-expanded', String(open)); };
@@ -134,10 +134,11 @@ $('composer').onsubmit = (event) => {
     const message = $('message').value.trim();
     $('message').value = '';
     session.messages.push({role: 'user', content: message}); render();
+    $('conversation').scrollTop = $('conversation').scrollHeight;
     feedback('Babel está analisando seu pedido. O primeiro uso pode demorar enquanto o modelo carrega.');
     session = await api('chat', {session: session.id, message, model: $('model').value});
     render(); await history(); feedback(session.pending ? 'Revise a ação antes de aprovar.' : 'Pronto.');
-    $('composer').scrollIntoView({block:'end', behavior:'auto'});
+    $('conversation').scrollTop = $('conversation').scrollHeight;
   });
 };
 $('message').onkeydown = (event) => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {event.preventDefault(); $('composer').requestSubmit();} };
@@ -150,3 +151,27 @@ $('export').onclick = () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 perform(async () => { await refresh(); await history(); });
+
+// Nested contours give the local agent a static, low-cost visual signature.
+function drawOrbit() {
+  const ctx = $('orbit').getContext('2d');
+  if (!ctx) return;
+  ctx.translate(280, 130);
+  ctx.rotate(-0.18);
+  ctx.lineWidth = 1.5;
+  for (let ring = 0; ring < 46; ring++) {
+    const phase = (ring / 46) * Math.PI * 2;
+    ctx.beginPath();
+    for (let step = 0; step <= 200; step++) {
+      const angle = step * Math.PI / 100;
+      const radius = 141 + 34 * Math.cos(phase + 2 * angle);
+      const x = radius * Math.cos(angle);
+      const y = radius * Math.sin(angle) * 0.35 + 44 * Math.sin(phase + 2 * angle);
+      if (step === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(181, 224, 185,' + (0.29 + 0.24 * (1 + Math.cos(phase))) + ')';
+    ctx.stroke();
+  }
+}
+drawOrbit();
