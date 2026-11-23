@@ -33,7 +33,7 @@ function feedback(message, error = false) {
 function setBusy(value) {
   busy = value;
   document.querySelectorAll('button,select,textarea').forEach(el => {el.disabled = value;});
-  for (const id of ['menu', 'environment-open', 'environment-close']) $(id).disabled = false;
+  for (const id of ['menu', 'environment-open', 'environment-close', 'tools-open', 'tools-add', 'tools-close', 'tools-back']) $(id).disabled = false;
   $('send').disabled = value || !!session?.pending || !$('model').value;
   $('send').setAttribute('aria-label', value ? 'Pensando…' : 'Enviar mensagem');
   $('conversation').setAttribute('aria-busy', String(value));
@@ -54,10 +54,10 @@ function renderHistory() {
     button.onclick = () => perform(async () => { session = await api('sessions/' + item.id); render(); await history(); closeMenu(); });
     $('sessions').append(button);
   });
-  if (!list.length) $('sessions').append(text('p', query ? 'Nenhuma conversa encontrada.' : 'Sua próxima ideia começa aqui.', 'empty-history'));
+  if (!list.length) $('sessions').append(text('p', query ? 'Nenhuma conversa encontrada.' : 'Nenhuma conversa ainda.', 'empty-history'));
 }
 function render() {
-  $('page-title').textContent = session?.messages.length ? session.title : 'Espaço pessoal';
+  $('page-title').textContent = session?.messages.length ? session.title : 'Nova conversa';
   $('welcome').hidden = !!session?.messages.length;
   $('messages').replaceChildren();
   for (const message of session?.messages || []) {
@@ -107,25 +107,26 @@ async function refresh() {
   const previous = $('model').value || localStorage.getItem('babel-model');
   const status = await api('status');
   $('model').replaceChildren();
-  status.models.forEach(name => { const option = text('option', name); option.value = name; $('model').append(option); });
+  status.models.forEach(name => { const option = text('option', name === 'openrouter/free' ? 'Online grátis · OpenRouter' : name); option.value = name; $('model').append(option); });
   if (!status.models.length) {
     const option = text('option', 'Nenhum modelo disponível'); option.value = ''; $('model').append(option);
   } else if (status.models.includes(previous)) $('model').value = previous;
   else if (status.models.includes('qwen3:4b')) $('model').value = 'qwen3:4b';
   $('workspace').textContent = status.workspace;
-  $('status').textContent = status.error ? 'Ollama desconectado' : 'Ollama conectado';
+  $('status').textContent = status.error ? 'Modelos indisponíveis' : 'Modelos disponíveis';
   $('status').className = status.error ? '' : 'online';
   if (status.error) feedback(status.error, true);
+  else if ($('model').value === 'openrouter/free') feedback('Online: conversa e resultados das ferramentas enviados ao OpenRouter. Sujeito à cota gratuita.');
   else if (!status.models.length) feedback('Instale um modelo: ollama pull qwen3:4b. Depois atualize a lista.', true);
 }
-$('new').onclick = () => perform(async () => { session = await api('sessions', {}); render(); await history(); feedback('Nova conversa pronta.'); $('message').value = ''; });
+$('new').onclick = () => perform(async () => { session = await api('sessions', {}); render(); await history(); closeMenu(); feedback('Nova conversa pronta.'); $('message').value = ''; });
 $('search').oninput = renderHistory;
 function closeMenu() { document.body.classList.remove('menu-open'); $('menu').setAttribute('aria-expanded', 'false'); }
 $('menu').onclick = () => { const open = document.body.classList.toggle('menu-open'); $('menu').setAttribute('aria-expanded', String(open)); };
 $('environment-open').onclick = () => $('environment').showModal();
 $('environment-close').onclick = () => $('environment').close();
 $('refresh').onclick = () => perform(refresh);
-$('model').onchange = () => { localStorage.setItem('babel-model', $('model').value); setBusy(false); };
+$('model').onchange = () => { feedback($('model').value === 'openrouter/free' ? 'Online: a conversa e os resultados das ferramentas serão enviados ao OpenRouter. Sujeito à cota gratuita.' : 'Modelo local selecionado.'); localStorage.setItem('babel-model', $('model').value); setBusy(false); };
 $('composer').onsubmit = (event) => {
   event.preventDefault();
   if (busy || session?.pending || !$('model').value || !$('message').value.trim()) return;
@@ -134,10 +135,11 @@ $('composer').onsubmit = (event) => {
     const message = $('message').value.trim();
     $('message').value = '';
     session.messages.push({role: 'user', content: message}); render();
+    $('conversation').scrollTop = $('conversation').scrollHeight;
     feedback('Babel está analisando seu pedido. O primeiro uso pode demorar enquanto o modelo carrega.');
     session = await api('chat', {session: session.id, message, model: $('model').value});
     render(); await history(); feedback(session.pending ? 'Revise a ação antes de aprovar.' : 'Pronto.');
-    $('composer').scrollIntoView({block:'end', behavior:'auto'});
+    $('conversation').scrollTop = $('conversation').scrollHeight;
   });
 };
 $('message').onkeydown = (event) => { if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {event.preventDefault(); $('composer').requestSubmit();} };
@@ -150,3 +152,302 @@ $('export').onclick = () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 perform(async () => { await refresh(); await history(); });
+
+const toolGroups = {
+  "Pesquisa & inteligência": [
+    [
+      "Busca na Web",
+      "Pesquisa e fontes online"
+    ],
+    [
+      "OSINT",
+      "Pesquisa em fontes públicas"
+    ],
+    [
+      "Análise de Sites",
+      "Análise de páginas e URLs"
+    ],
+    [
+      "Fact-Checker",
+      "Verificação de fatos com fontes"
+    ],
+    [
+      "Geolocalização",
+      "Informações de localização"
+    ]
+  ],
+  "Segurança & hacking": [
+    [
+      "Pentest Assistant",
+      "Testes de segurança guiados"
+    ],
+    [
+      "Password Tools",
+      "Geração e análise de senhas"
+    ],
+    [
+      "Forensics",
+      "Análise forense digital"
+    ],
+    [
+      "Firewall Tester",
+      "Revisão de regras de firewall"
+    ],
+    [
+      "Malware Analysis",
+      "Análise de arquivos suspeitos"
+    ],
+    [
+      "WiFi Auditor",
+      "Auditoria de redes sem fio"
+    ],
+    [
+      "DDoS Analyzer",
+      "Análise e mitigação de DDoS"
+    ]
+  ],
+  "Programação": [
+    [
+      "Gerador de Código",
+      "Linguagens e projetos"
+    ],
+    [
+      "Shell & Scripts",
+      "Bash, PowerShell e automações"
+    ],
+    [
+      "Engenharia Reversa",
+      "Análise de binários"
+    ],
+    [
+      "API Builder",
+      "APIs REST e integrações"
+    ],
+    [
+      "SQL Generator",
+      "Consultas e schemas"
+    ],
+    [
+      "Webhooks & Bots",
+      "Automações e integrações"
+    ],
+    [
+      "Converter & Parser",
+      "Conversão de formatos de dados"
+    ],
+    [
+      "Server Config",
+      "Servidores e infraestrutura"
+    ],
+    [
+      "Debug & Fix",
+      "Encontre e corrija bugs"
+    ]
+  ],
+  "Rastreamento & monitoramento": [
+    [
+      "IP Tracker",
+      "Informações de rede e IP"
+    ],
+    [
+      "Phone Lookup",
+      "Informações de números telefônicos"
+    ],
+    [
+      "Email Tracer",
+      "Análise de cabeçalhos de emails"
+    ]
+  ],
+  "Escrita & criação": [
+    [
+      "Redação Pro",
+      "Textos, artigos e copywriting"
+    ],
+    [
+      "Reescrever Texto",
+      "Revise e melhore seus textos"
+    ],
+    [
+      "Social Media",
+      "Estratégias e conteúdo"
+    ],
+    [
+      "Email Writer",
+      "Emails profissionais"
+    ],
+    [
+      "Currículo",
+      "Currículos e apresentações"
+    ],
+    [
+      "Design Assistant",
+      "UI/UX, logos e identidade visual"
+    ],
+    [
+      "Roteiro de Vídeo",
+      "Roteiros e conceitos"
+    ],
+    [
+      "Composição Musical",
+      "Letras, acordes e arranjos"
+    ],
+    [
+      "Gerador de Notícias",
+      "Artigos e press releases"
+    ]
+  ],
+  "Finanças & cripto": [
+    [
+      "Cotação Cripto",
+      "Consulta de preços"
+    ],
+    [
+      "Análise de Mercado",
+      "Ações, fundos e tendências"
+    ],
+    [
+      "Câmbio",
+      "Conversão de moedas"
+    ],
+    [
+      "Planejamento Financeiro",
+      "Organização financeira"
+    ]
+  ],
+  "Conhecimento": [
+    [
+      "Tutor IA",
+      "Aprenda e pratique"
+    ],
+    [
+      "Tradutor",
+      "Tradução de textos"
+    ],
+    [
+      "Resumidor",
+      "Resuma conteúdos"
+    ],
+    [
+      "Matemática",
+      "Cálculo, álgebra e estatística"
+    ],
+    [
+      "Jurídico",
+      "Leis, contratos e direitos"
+    ],
+    [
+      "Argumentação",
+      "Debates e contra-argumentos"
+    ]
+  ],
+  "Ciência & saúde": [
+    [
+      "Consultor Médico",
+      "Informações gerais de saúde"
+    ],
+    [
+      "Bula de Remédios",
+      "Consulta de informações de medicamentos"
+    ],
+    [
+      "Química & Física",
+      "Fórmulas, reações e cálculos"
+    ],
+    [
+      "Monitor de Saúde",
+      "Organização de dados de saúde"
+    ],
+    [
+      "Genética",
+      "DNA e genoma"
+    ],
+    [
+      "Física Avançada",
+      "Cálculos e simulações"
+    ]
+  ],
+  "Produtividade": [
+    [
+      "Automações",
+      "Fluxos de trabalho"
+    ],
+    [
+      "Ferramentas Dev",
+      "JSON, regex e formatação"
+    ],
+    [
+      "Cloud Tools",
+      "Deploy, CI/CD e infraestrutura"
+    ],
+    [
+      "Prompt Engineer",
+      "Escreva e refine prompts"
+    ],
+    [
+      "No-Code Builder",
+      "Planeje apps visuais"
+    ],
+    [
+      "Mind Map",
+      "Organize ideias"
+    ],
+    [
+      "Quick Actions",
+      "Atalhos para tarefas comuns"
+    ]
+  ]
+};
+
+let toolCategory = 'Todas';
+const categoryIcons = ['search', 'sliders', 'note', 'search', 'note', 'calendar', 'note', 'plus', 'folder'];
+const toolTabs = document.querySelector('.tool-tabs');
+for (const category of ['Todas', ...Object.keys(toolGroups)]) {
+  const button = text('button', category);
+  button.setAttribute('aria-pressed', String(category === toolCategory));
+  button.onclick = () => {
+    toolCategory = category;
+    for (const tab of toolTabs.children) tab.setAttribute('aria-pressed', String(tab === button));
+    renderTools();
+  };
+  toolTabs.append(button);
+}
+function renderTools() {
+  $('tool-preview').hidden = true;
+  $('tools-list').hidden = false;
+  $('tools-list').replaceChildren();
+  const query = $('tool-search').value.trim().toLocaleLowerCase('pt-BR');
+  Object.entries(toolGroups).forEach(([category, items], index) => {
+    if (toolCategory !== 'Todas' && category !== toolCategory) return;
+    const matches = items.filter(item => item.join(' ').toLocaleLowerCase('pt-BR').includes(query));
+    if (!matches.length) return;
+    const group = text('section', '', 'tool-group');
+    group.append(text('h3', category));
+    for (const [itemIndex, [name, description]] of matches.entries()) {
+      const button = text('button', '', 'tool-item');
+      const tile = text('span', '', 'tool-tile tone-' + (index + itemIndex) % 5);
+      tile.append(icon(categoryIcons[(index + itemIndex) % categoryIcons.length]));
+      const copy = text('span', '', 'tool-copy');
+      copy.append(text('strong', name), text('small', description));
+      button.append(tile, copy);
+      button.onclick = () => {
+        $('tools-list').hidden = true;
+        $('tool-preview').hidden = false;
+        $('tool-title').textContent = name;
+        $('tool-description').textContent = description;
+        $('tools-back').focus();
+      };
+      group.append(button);
+    }
+    $('tools-list').append(group);
+  });
+  if (!$('tools-list').children.length) $('tools-list').append(text('p', 'Nenhuma ferramenta encontrada.'));
+}
+function openTools() {
+  renderTools();
+  $('tools-dialog').showModal();
+}
+$('tools-open').onclick = openTools;
+$('tools-add').onclick = openTools;
+$('tools-close').onclick = () => $('tools-dialog').close();
+$('tools-back').onclick = () => { renderTools(); $('tool-search').focus(); };
+$('tool-search').oninput = renderTools;

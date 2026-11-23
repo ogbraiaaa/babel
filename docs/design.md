@@ -1,12 +1,16 @@
-# Direção visual
+# Interface do Babel
 
-O Babel usa uma interface monocromática: navegação à esquerda, conversa central e ambiente em um painel que abre sob demanda. A referência foi um conceito gerado com Image Gen a partir da direção enviada pelo usuário; a interface final é implementada em HTML/CSS/SVG, sem imagens externas em tempo de execução.
+A serpente em volta do B identifica o aplicativo na aba, na navegação e na tela inicial. A tela de entrada enquadra o emblema com uma grade e marcas de registro. Ao abrir uma conversa, esse painel dá lugar às mensagens.
 
-- Fundo `#0b0c0e`, superfícies `#131518`, bordas `#303339`.
-- Texto `#f4f4f5`, secundário `#a2a5ad`, conexão `#b6dce3`.
-- Segoe UI/system-ui, controles com pelo menos 44 px de altura.
-- A marca é um ciclo em forma de serpente geométrica em torno da letra B, inspirado na referência fornecida e desenhado em SVG.
-- No celular, as conversas ficam em um menu expansível. O painel Ambiente é um diálogo nativo com foco contido e fechamento por Escape.
-- Busca por título, sugestões com descrições e seletor de modelo junto da mensagem evitam controles sem função.
+O fundo ameixa usa `#180f23`, as superfícies usam `#241830` e o lilás `#d3adff` destaca a marca, o foco de teclado e as ações principais. O texto das conversas usa a fonte do sistema. O estado do Ollama, o seletor de modelo e os resultados das ferramentas usam tipografia monoespaçada.
 
-O screenshot `babel.png` mostra o aplicativo real, não o conceito.
+## Referências visuais
+
+- O painel de identificação retoma o enquadramento das interfaces de *Terminator Salvation*. [Skynet UI, Jake Sargeant / MN8](https://mn8studio.com/project/terminator-salvation-skynet-ui)
+- Os rótulos técnicos usam a tipografia de largura fixa das sequências de visão das máquinas. [Machine Vision, Imaginary Forces](https://motionographer.com/2009/06/18/imaginary-forces-creates-machine-vision-for-terminator-salvation/)
+
+A interface usa CSS e o SVG local da marca. As referências podem ser consultadas separadamente, inclusive quando o agente é usado offline.
+
+## Catálogo de ferramentas
+
+O menu Ferramentas e o botão + abrem um catálogo inspirado nas capturas de SKYNETchat fornecidas pelo usuário. Abas filtram categorias e a busca encontra módulos pelo nome ou descrição. Cada item abre uma prévia identificada como integração em desenvolvimento. O catálogo usa fundo escuro, caixas coloridas para ícones e destaque roxo.

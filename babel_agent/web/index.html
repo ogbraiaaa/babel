@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Babel, seu agente pessoal de IA local.">
-  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#0b0c0e">
+  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#180f23">
   <title>Babel · Seu espaço pessoal</title>
   <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
@@ -24,29 +24,33 @@
 </svg>
 <a class="skip" href="#message">Ir para a mensagem</a>
 <aside class="sidebar" id="sidebar">
-  <a class="brand" href="/" aria-label="Babel, início"><img src="/favicon.svg" alt="" width="50" height="50"><span>babel<small>Seu agente pessoal</small></span></a>
+  <a class="brand" href="/" aria-label="Babel, início"><img src="/favicon.svg" alt="" width="38" height="38"><span>babel<small>Agente local</small></span></a>
   <button id="new" class="outline"><svg class="icon"><use href="#i-plus"/></svg>Nova conversa</button>
   <label class="sr-only" for="search">Buscar conversa</label>
   <div class="search-field"><svg class="icon"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Buscar conversa" autocomplete="off"></div>
-  <h2 class="section-label">Recentes</h2><nav id="sessions" aria-label="Conversas salvas"></nav>
+  <h2 class="section-label">Conversas recentes</h2><nav id="sessions" aria-label="Conversas salvas"></nav>
   <div class="sidebar-footer"><button id="export" class="quiet"><svg class="icon"><use href="#i-download"/></svg>Exportar conversa</button></div>
 </aside>
 <main>
   <header class="topbar">
     <button id="menu" class="icon-button mobile-menu" aria-label="Abrir conversas" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
-    <h1 id="page-title">Espaço pessoal</h1>
+    <button id="tools-open" class="tools-trigger" aria-haspopup="dialog">Babel <span>Ferramentas</span>⌄</button><h1 id="page-title">Nova conversa</h1>
     <div class="topbar-actions"><span id="status" role="status">Conectando…</span><button id="environment-open" class="outline"><svg class="icon"><use href="#i-sliders"/></svg>Ambiente</button></div>
   </header>
   <div class="stage">
     <div id="conversation">
       <section id="welcome">
-        <img class="hero-mark" src="/favicon.svg" width="144" height="144" alt="">
-        <h2>O que vamos criar hoje?</h2>
-        <p>Uma ideia, um plano ou uma tarefa.<br class="mobile-break"> Eu cuido dos próximos passos.</p>
+        <div class="console-heading">
+          <div class="console-title">
+            <h2>Console<br><strong>Babel</strong></h2>
+            <p>Por onde começamos?</p>
+          </div>
+          <div class="insignia" aria-hidden="true"><img src="/favicon.svg" alt=""></div>
+        </div>
         <div class="suggestions">
-          <button data-prompt="Liste os arquivos da minha área de trabalho."><svg class="icon"><use href="#i-folder"/></svg><span><strong>Explorar arquivos</strong><small>Encontre o que está na sua área de trabalho</small></span></button>
-          <button data-prompt="Crie uma nota em notas/ideias.md com três ideias de projetos de programação."><svg class="icon"><use href="#i-note"/></svg><span><strong>Escrever uma nota</strong><small>Transforme uma ideia em um arquivo</small></span></button>
-          <button data-prompt="Me ajude a planejar meu dia. Primeiro pergunte quais são minhas prioridades."><svg class="icon"><use href="#i-calendar"/></svg><span><strong>Planejar meu dia</strong><small>Defina prioridades e próximos passos</small></span></button>
+          <button data-prompt="Liste os arquivos da minha área de trabalho."><svg class="icon"><use href="#i-folder"/></svg><span><strong>Explorar arquivos</strong><small>Ver o conteúdo da pasta</small></span></button>
+          <button data-prompt="Crie uma nota em notas/ideias.md com três ideias de projetos de programação."><svg class="icon"><use href="#i-note"/></svg><span><strong>Escrever uma nota</strong><small>Salvar uma ideia em arquivo</small></span></button>
+          <button data-prompt="Me ajude a planejar meu dia. Primeiro pergunte quais são minhas prioridades."><svg class="icon"><use href="#i-calendar"/></svg><span><strong>Planejar meu dia</strong><small>Organizar prioridades</small></span></button>
         </div>
       </section>
       <section id="messages" aria-label="Mensagens"></section>
@@ -54,20 +58,29 @@
     </div>
     <div class="composer-area">
       <form id="composer">
-        <label for="message">Sua mensagem</label>
-        <textarea id="message" rows="2" maxlength="16000" placeholder="Peça algo ao Babel..." required></textarea>
-        <div class="composer-toolbar"><div class="model-field"><label class="sr-only" for="model">Modelo</label><select id="model"><option value="">Carregando…</option></select></div><button id="send" class="send" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
+        <label class="sr-only" for="message">Sua mensagem</label>
+        <textarea id="message" rows="2" maxlength="16000" placeholder="Envie uma mensagem ao Babel…" required></textarea>
+        <div class="composer-toolbar"><button id="tools-add" type="button" class="icon-button" aria-label="Explorar ferramentas" aria-haspopup="dialog"><svg class="icon"><use href="#i-plus"/></svg></button><div class="model-field"><label class="sr-only" for="model">Modelo</label><select id="model"><option value="">Carregando…</option></select></div><button id="send" class="send" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
       </form>
-      <p id="feedback" role="status">Local no seu computador. Ações sempre sob seu controle.</p>
+      <p id="feedback" role="status">Enter para enviar · Shift + Enter para quebrar a linha.</p>
     </div>
   </div>
 </main>
 <dialog id="environment" class="drawer" aria-labelledby="environment-title">
   <div class="dialog-heading"><h2 id="environment-title">Seu ambiente</h2><button id="environment-close" class="icon-button" aria-label="Fechar ambiente"><svg class="icon"><use href="#i-close"/></svg></button></div>
-  <p>Seu modelo, seus arquivos, suas decisões.</p>
-  <section><h3>Modelo local</h3><p id="model-help">Selecione um modelo no campo de mensagem. Ele precisa oferecer suporte a ferramentas.</p><button id="refresh" class="outline">Atualizar modelos</button></section>
+  <p>Configurações do agente local</p>
+  <section><h3>Modelos locais e online</h3><p id="model-help">Selecione um modelo no campo de mensagem. O OpenRouter usa modelos gratuitos online quando a chave está configurada.</p><button id="refresh" class="outline">Atualizar modelos</button></section>
+  <section><h3>OpenRouter gratuito</h3><p>Crie uma chave em openrouter.ai/keys e configure OPENROUTER_API_KEY antes de iniciar a Babel. Selecione Online grátis no campo de mensagem.</p><p>O provedor recebe a conversa e os resultados das ferramentas, incluindo conteúdo dos arquivos consultados. O serviço tem limites de uso.</p></section>
   <section><h3>Ferramentas disponíveis</h3><ul><li>Ler e listar arquivos</li><li>Criar notas e arquivos</li><li>Mover e renomear</li><li>Consultar data e sistema</li></ul><p>Alterações exigem sua aprovação individual.</p></section>
   <section><h3>Área de trabalho</h3><p id="workspace" class="path"></p><p>O Babel acessa somente esta pasta.</p></section>
   <p class="version">Babel · Inteligência local</p>
+</dialog>
+<dialog id="tools-dialog" aria-labelledby="tools-title">
+  <header class="tools-heading"><h2 id="tools-title">Ferramentas Babel</h2><button id="tools-close" class="icon-button" aria-label="Fechar ferramentas">×</button></header>
+  <div class="tool-tabs" aria-label="Categorias de ferramentas"></div>
+  <div class="tools-search"><label class="sr-only" for="tool-search">Buscar ferramenta</label><input id="tool-search" type="search" placeholder="Buscar ferramenta…"></div>
+  <p class="preview-note">Prévia dos módulos · integrações em desenvolvimento</p>
+  <div id="tools-list"></div>
+  <section id="tool-preview" hidden><button id="tools-back" class="quiet">← Todas as ferramentas</button><h3 id="tool-title"></h3><p id="tool-description"></p><p>Este módulo está em prévia visual. A integração ainda está em desenvolvimento.</p></section>
 </dialog>
 </body></html>

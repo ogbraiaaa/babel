@@ -149,3 +149,28 @@ Veja [CONTRIBUTING.md](CONTRIBUTING.md) para contribuir.
 ## Licença
 
 [MIT](LICENSE). Criado por [Brayan Silva](https://github.com/ogbraiaaa).
+
+
+## Modelos gratuitos online
+
+A Babel também oferece o roteador `openrouter/free`, que escolhe modelos gratuitos com suporte às ferramentas do agente. Crie uma chave em https://openrouter.ai/keys.
+
+No PowerShell, configure a chave somente no terminal local e inicie a Babel:
+
+```powershell
+$env:OPENROUTER_API_KEY="sua-chave"
+python -m babel_agent
+```
+
+No Linux/macOS:
+
+```bash
+export OPENROUTER_API_KEY="sua-chave"
+python -m babel_agent
+```
+
+Selecione **Online grátis · OpenRouter** no campo de mensagem. A chave fica no processo do servidor. A conversa e os resultados das ferramentas, incluindo conteúdo de arquivos consultados, são enviados ao provedor selecionado pelo OpenRouter. Consulte as condições de privacidade na sua conta.
+
+O serviço tem cotas e disponibilidade variável. Cada etapa do agente pode consumir uma chamada. Ao atingir o limite, a interface mostra um erro e permite escolher um modelo local. A integração usa exclusivamente o identificador gratuito `openrouter/free`.
+
+Referência de disponibilidade e limites: https://openrouter.ai/collections/free-models
