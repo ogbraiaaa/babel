@@ -169,3 +169,50 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.6 Consolas, m
   #approval .actions { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Tool picker follows the supplied SKYNETchat reference. */
+.tools-trigger { background: transparent; white-space: nowrap; font-size: 17px; padding-inline: 6px; }
+.tools-trigger span { color: var(--accent); font-size: 13px; }
+#tools-dialog { color: var(--ink); background: #1d1a21; border: 1px solid #443b4d; border-radius: 18px; padding: 0; width: min(680px, calc(100% - 24px)); max-height: 80dvh; }
+#tools-dialog::backdrop { background: #0008; }
+.tools-heading { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid #3c3543; }
+.tools-heading h2 { font-size: 17px; margin: 0; font-weight: 550; }
+#tools-close { font-size: 24px; }
+.tool-tabs { display: flex; gap: 7px; overflow-x: auto; padding: 12px 18px; }
+.tool-tabs button { flex-shrink: 0; background: transparent; font-size: 12px; border-radius: 9px; }
+.tool-tabs button[aria-pressed=true] { background: #49335c; color: #e6caff; }
+.tools-search { padding: 0 20px; }
+.tools-search input { width: 100%; border: 1px solid #4b4055; border-radius: 9px; background: #151218; color: var(--ink); padding: 10px 14px; }
+.preview-note { font-size: 11px; color: #b3a5bf; margin: 10px 22px 0; }
+#tools-list { overflow-y: auto; max-height: 52dvh; padding: 0 20px 18px; }
+.tool-group h3 { font-size: 12px; color: #aaa0b3; text-transform: uppercase; letter-spacing: .07em; margin: 24px 0 12px; }
+.tool-item { display: flex; width: 100%; justify-content: flex-start; text-align: left; background: transparent; gap: 14px; padding: 12px 6px; border-radius: 10px; }
+.tool-tile { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 11px; background: #322340; color: #bf8aff; }
+.tone-1 { background: #39232d; color: #f080a6; }
+.tone-2 { background: #203440; color: #72c3ed; }
+.tone-3 { background: #243c35; color: #73d2af; }
+.tone-4 { background: #3b3424; color: #e6c36b; }
+.tool-copy strong { display: block; font-size: 16px; font-weight: 500; }
+.tool-copy small { display: block; font-size: 13px; color: #aaa1b3; margin-top: 4px; }
+#tool-preview { padding: 20px; }
+#tool-preview h3 { margin-top: 24px; color: var(--accent); }
+#tools-add { border-radius: 50%; background: #35273f; }
+.composer-toolbar .model-field { margin-right: auto; min-width: 0; }
+@media (max-width: 720px) {
+  .topbar #page-title, .topbar #status { display: none; }
+  .tools-trigger { margin-right: auto; font-size: 16px; }
+  .tools-trigger span { font-size: 12px; }
+  #tools-dialog { max-height: 84dvh; }
+  #tools-list { max-height: 53dvh; }
+  .tools-heading { padding: 8px 14px; }
+  .tool-tabs { padding: 8px 12px; }
+  #tools-list { padding-inline: 14px; }
+  .tool-copy strong { font-size: 15px; }
+}
+@media (max-width: 400px) {
+  .composer-toolbar { gap: 6px; }
+  .composer-toolbar select { max-width: 145px; width: 100%; padding-left: 8px; }
+  .composer-toolbar .model-field { flex: 1; }
+  .topbar-actions button { padding-inline: 8px; }
+  .tools-trigger span { display: none; }
+}

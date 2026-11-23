@@ -10,3 +10,7 @@ O fundo ameixa usa `#180f23`, as superfícies usam `#241830` e o lilás `#d3adff
 - Os rótulos técnicos usam a tipografia de largura fixa das sequências de visão das máquinas. [Machine Vision, Imaginary Forces](https://motionographer.com/2009/06/18/imaginary-forces-creates-machine-vision-for-terminator-salvation/)
 
 A interface usa CSS e o SVG local da marca. As referências podem ser consultadas separadamente, inclusive quando o agente é usado offline.
+
+## Catálogo de ferramentas
+
+O menu Ferramentas e o botão + abrem um catálogo inspirado nas capturas de SKYNETchat fornecidas pelo usuário. Abas filtram categorias e a busca encontra módulos pelo nome ou descrição. Cada item abre uma prévia identificada como integração em desenvolvimento. O catálogo usa fundo escuro, caixas coloridas para ícones e destaque roxo.

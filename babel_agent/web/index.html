@@ -34,7 +34,7 @@
 <main>
   <header class="topbar">
     <button id="menu" class="icon-button mobile-menu" aria-label="Abrir conversas" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
-    <h1 id="page-title">Nova conversa</h1>
+    <button id="tools-open" class="tools-trigger" aria-haspopup="dialog">Babel <span>Ferramentas</span>⌄</button><h1 id="page-title">Nova conversa</h1>
     <div class="topbar-actions"><span id="status" role="status">Conectando…</span><button id="environment-open" class="outline"><svg class="icon"><use href="#i-sliders"/></svg>Ambiente</button></div>
   </header>
   <div class="stage">
@@ -60,7 +60,7 @@
       <form id="composer">
         <label class="sr-only" for="message">Sua mensagem</label>
         <textarea id="message" rows="2" maxlength="16000" placeholder="Envie uma mensagem ao Babel…" required></textarea>
-        <div class="composer-toolbar"><div class="model-field"><label class="sr-only" for="model">Modelo</label><select id="model"><option value="">Carregando…</option></select></div><button id="send" class="send" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
+        <div class="composer-toolbar"><button id="tools-add" type="button" class="icon-button" aria-label="Explorar ferramentas" aria-haspopup="dialog"><svg class="icon"><use href="#i-plus"/></svg></button><div class="model-field"><label class="sr-only" for="model">Modelo</label><select id="model"><option value="">Carregando…</option></select></div><button id="send" class="send" type="submit" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="icon"><use href="#i-arrow"/></svg></button></div>
       </form>
       <p id="feedback" role="status">Enter para enviar · Shift + Enter para quebrar a linha.</p>
     </div>
@@ -73,5 +73,13 @@
   <section><h3>Ferramentas disponíveis</h3><ul><li>Ler e listar arquivos</li><li>Criar notas e arquivos</li><li>Mover e renomear</li><li>Consultar data e sistema</li></ul><p>Alterações exigem sua aprovação individual.</p></section>
   <section><h3>Área de trabalho</h3><p id="workspace" class="path"></p><p>O Babel acessa somente esta pasta.</p></section>
   <p class="version">Babel · Inteligência local</p>
+</dialog>
+<dialog id="tools-dialog" aria-labelledby="tools-title">
+  <header class="tools-heading"><h2 id="tools-title">Ferramentas Babel</h2><button id="tools-close" class="icon-button" aria-label="Fechar ferramentas">×</button></header>
+  <div class="tool-tabs" aria-label="Categorias de ferramentas"></div>
+  <div class="tools-search"><label class="sr-only" for="tool-search">Buscar ferramenta</label><input id="tool-search" type="search" placeholder="Buscar ferramenta…"></div>
+  <p class="preview-note">Prévia dos módulos · integrações em desenvolvimento</p>
+  <div id="tools-list"></div>
+  <section id="tool-preview" hidden><button id="tools-back" class="quiet">← Todas as ferramentas</button><h3 id="tool-title"></h3><p id="tool-description"></p><p>Este módulo está em prévia visual. A integração ainda está em desenvolvimento.</p></section>
 </dialog>
 </body></html>
