@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Babel, seu agente pessoal de IA local.">
-  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#0b0c0e">
+  <meta name="babel-token" content="__BABEL_TOKEN__"><meta name="theme-color" content="#180f23">
   <title>Babel · Seu espaço pessoal</title>
   <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
@@ -40,9 +40,13 @@
   <div class="stage">
     <div id="conversation">
       <section id="welcome">
-        <canvas id="orbit" width="560" height="260" aria-hidden="true"></canvas>
-        <h2>O que vamos criar <em>hoje?</em></h2>
-        <p>Explore seus arquivos, escreva uma nota ou organize seu dia.</p>
+        <div class="console-heading">
+          <div class="console-title">
+            <h2>Console<br><strong>Babel</strong></h2>
+            <p>Por onde começamos?</p>
+          </div>
+          <div class="insignia" aria-hidden="true"><img src="/favicon.svg" alt=""></div>
+        </div>
         <div class="suggestions">
           <button data-prompt="Liste os arquivos da minha área de trabalho."><svg class="icon"><use href="#i-folder"/></svg><span><strong>Explorar arquivos</strong><small>Ver o conteúdo da pasta</small></span></button>
           <button data-prompt="Crie uma nota em notas/ideias.md com três ideias de projetos de programação."><svg class="icon"><use href="#i-note"/></svg><span><strong>Escrever uma nota</strong><small>Salvar uma ideia em arquivo</small></span></button>

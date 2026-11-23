@@ -151,27 +151,3 @@ $('export').onclick = () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 perform(async () => { await refresh(); await history(); });
-
-// Nested contours give the local agent a static, low-cost visual signature.
-function drawOrbit() {
-  const ctx = $('orbit').getContext('2d');
-  if (!ctx) return;
-  ctx.translate(280, 130);
-  ctx.rotate(-0.18);
-  ctx.lineWidth = 1.5;
-  for (let ring = 0; ring < 46; ring++) {
-    const phase = (ring / 46) * Math.PI * 2;
-    ctx.beginPath();
-    for (let step = 0; step <= 200; step++) {
-      const angle = step * Math.PI / 100;
-      const radius = 141 + 34 * Math.cos(phase + 2 * angle);
-      const x = radius * Math.cos(angle);
-      const y = radius * Math.sin(angle) * 0.35 + 44 * Math.sin(phase + 2 * angle);
-      if (step === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.strokeStyle = 'rgba(181, 224, 185,' + (0.29 + 0.24 * (1 + Math.cos(phase))) + ')';
-    ctx.stroke();
-  }
-}
-drawOrbit();
