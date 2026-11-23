@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 
 from .tools import DEFINITIONS, WRITES
 
-SYSTEM = """Você é Babel, um assistente pessoal de IA local. Responda em português, com clareza e personalidade serena.
+SYSTEM = """Você é Babel, um assistente pessoal de IA. Responda em português, com clareza e personalidade serena.
 Use ferramentas para agir, nunca alegue ter executado algo sem resultado de ferramenta.
 Seu acesso a arquivos se limita à área de trabalho. Para notas, crie arquivos .md.
 Alterações exigem aprovação na interface. Não peça ao usuário para aprovar por texto.
@@ -110,7 +110,7 @@ class Agent:
             if not isinstance(content, str) or not content.strip() or len(content) > 16000:
                 raise ValueError("Escreva uma mensagem entre 1 e 16.000 caracteres.")
             if model not in self.client.models():
-                raise ValueError("Modelo local não encontrado. Atualize a lista de modelos.")
+                raise ValueError("Modelo não encontrado. Atualize a lista de modelos.")
             if not session["messages"]:
                 session["title"] = content.strip()[:60]
             session["messages"].append({"role": "user", "content": content.strip()})

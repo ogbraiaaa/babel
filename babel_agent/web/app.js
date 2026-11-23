@@ -107,15 +107,16 @@ async function refresh() {
   const previous = $('model').value || localStorage.getItem('babel-model');
   const status = await api('status');
   $('model').replaceChildren();
-  status.models.forEach(name => { const option = text('option', name); option.value = name; $('model').append(option); });
+  status.models.forEach(name => { const option = text('option', name === 'openrouter/free' ? 'Online grátis · OpenRouter' : name); option.value = name; $('model').append(option); });
   if (!status.models.length) {
     const option = text('option', 'Nenhum modelo disponível'); option.value = ''; $('model').append(option);
   } else if (status.models.includes(previous)) $('model').value = previous;
   else if (status.models.includes('qwen3:4b')) $('model').value = 'qwen3:4b';
   $('workspace').textContent = status.workspace;
-  $('status').textContent = status.error ? 'Ollama desconectado' : 'Ollama conectado';
+  $('status').textContent = status.error ? 'Modelos indisponíveis' : 'Modelos disponíveis';
   $('status').className = status.error ? '' : 'online';
   if (status.error) feedback(status.error, true);
+  else if ($('model').value === 'openrouter/free') feedback('Online: conversa e resultados das ferramentas enviados ao OpenRouter. Sujeito à cota gratuita.');
   else if (!status.models.length) feedback('Instale um modelo: ollama pull qwen3:4b. Depois atualize a lista.', true);
 }
 $('new').onclick = () => perform(async () => { session = await api('sessions', {}); render(); await history(); closeMenu(); feedback('Nova conversa pronta.'); $('message').value = ''; });
@@ -125,7 +126,7 @@ $('menu').onclick = () => { const open = document.body.classList.toggle('menu-op
 $('environment-open').onclick = () => $('environment').showModal();
 $('environment-close').onclick = () => $('environment').close();
 $('refresh').onclick = () => perform(refresh);
-$('model').onchange = () => { localStorage.setItem('babel-model', $('model').value); setBusy(false); };
+$('model').onchange = () => { feedback($('model').value === 'openrouter/free' ? 'Online: a conversa e os resultados das ferramentas serão enviados ao OpenRouter. Sujeito à cota gratuita.' : 'Modelo local selecionado.'); localStorage.setItem('babel-model', $('model').value); setBusy(false); };
 $('composer').onsubmit = (event) => {
   event.preventDefault();
   if (busy || session?.pending || !$('model').value || !$('message').value.trim()) return;

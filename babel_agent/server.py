@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from .agent import Agent
-from .ollama import Ollama
+from .providers import Providers
 from .tools import Workspace
 
 WEB = Path(__file__).parent / "web"
@@ -111,7 +111,7 @@ def main():
     args = parser.parse_args()
     args.data_dir.mkdir(parents=True, exist_ok=True)
     workspace = Workspace(args.workspace or args.data_dir / "workspace")
-    agent = Agent(args.data_dir / "babel.sqlite3", workspace, Ollama())
+    agent = Agent(args.data_dir / "babel.sqlite3", workspace, Providers())
     server = ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(agent, secrets.token_urlsafe(32)))
     url = f"http://127.0.0.1:{server.server_port}"
     print(f"\n  BABEL · Seu agente local\n\n  Painel: {url}\n  Arquivos: {workspace.root}\n\n  Ctrl+C para encerrar.\n", flush=True)
